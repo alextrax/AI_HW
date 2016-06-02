@@ -1,6 +1,10 @@
 import sys
 import random
 import datetime
+try:
+    import Queue as Q  # ver. < 3.0
+except ImportError:
+    import queue as Q
 
 class node:
 	def __init__(self, state):
@@ -168,6 +172,75 @@ def dfs(init_state, success_state, n):
 	if has_answer == 0:
 		print "No Successful Way"
 
+def diff_str(a,b):
+    return sum ( a[i] != b[i] for i in range(len(a)) )
+
+def a_star(init_state, success_state, n):
+	print " <-- A* search -->"
+	init_node = node(init_state)
+	d = {init_state:1}
+	queue = Q.PriorityQueue()
+	distance = 0 + diff_str(init_state, success_state)
+	queue.put((distance, init_node))
+	max_queue_depth = 1
+	expended = 0
+	has_answer = 0
+	start = datetime.datetime.now()
+	while not queue.empty():
+		if queue.qsize() > max_queue_depth:
+			max_queue_depth = queue.qsize()
+		current = queue.get()[1]
+		if current.state == success_state:
+			print "A* Finished"
+			print current.steps 
+			print "steps: %d" % len(current.steps)
+			end = datetime.datetime.now()
+			diff = end - start
+			print "elapsed time:", diff.total_seconds() * 1000, "ms"
+			print "depth of stack/queue:", queue.qsize()
+			print "max depth of stack/queue:", max_queue_depth
+			print "nodes expended:", expended
+			has_answer = 1
+			break
+		upstate = move_up(current.state, n)
+		downstate = move_down(current.state, n)
+		leftstate = move_left(current.state, n)
+		rightstate = move_right(current.state, n)
+		if upstate != None and upstate not in d:
+			d[upstate] = 1
+			up_node = node(upstate)
+			up_node.steps = current.steps[:]
+			up_node.steps.append("UP")
+			distance = len(up_node.steps) + diff_str(upstate, success_state)
+			queue.put((distance, up_node))
+			expended += 1
+		if downstate != None and downstate not in d:
+			d[downstate] = 1
+			down_node = node(downstate)
+			down_node.steps = current.steps[:]
+			down_node.steps.append("DOWN")
+			distance = len(down_node.steps) + diff_str(downstate, success_state)
+			queue.put((distance, down_node))
+			expended += 1
+		if leftstate != None and leftstate not in d:
+			d[leftstate] = 1
+			left_node = node(leftstate)
+			left_node.steps = current.steps[:]
+			left_node.steps.append("LEFT")
+			distance = len(left_node.steps) + diff_str(leftstate, success_state)
+			queue.put((distance, left_node))
+			expended += 1
+		if rightstate != None and rightstate not in d:
+			d[rightstate] = 1
+			right_node = node(rightstate)
+			right_node.steps = current.steps[:]
+			right_node.steps.append("RIGHT")
+			distance = len(right_node.steps) + diff_str(rightstate, success_state)
+			queue.put((distance, right_node))
+			expended += 1		
+	if has_answer == 0:
+		print "No Successful Way"
+
 def main():
 	n = int(sys.argv[1])
 	success = [i for i in range(n*n)] # build success state
@@ -180,5 +253,6 @@ def main():
 	print "init state: " + init_state
 	bfs(init_state, success_state, n)
 	dfs(init_state, success_state, n)
+	a_star(init_state, success_state, n)
 
 main()		
