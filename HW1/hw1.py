@@ -57,13 +57,13 @@ def bfs(init_state, success_state, n):
 	init_node = node(init_state)
 	d = {init_state:1}
 	queue = [init_node]
-	max_queue_depth = 1
+	max_queue_size = 1
 	expended = 0
 	has_answer = 0
 	start = datetime.datetime.now()
 	while(len(queue) > 0):
-		if len(queue) > max_queue_depth:
-			max_queue_depth = len(queue)
+		if len(queue) > max_queue_size:
+			max_queue_size = len(queue)
 		current = queue.pop(0)
 		if current.state == success_state:
 			print "BFS Finished"
@@ -73,11 +73,12 @@ def bfs(init_state, success_state, n):
 			diff = end - start
 			print "elapsed time:", diff.total_seconds() * 1000, "ms"
 			print "depth of stack/queue:", len(current.steps)+1
-			print "max depth of stack/queue:", max_queue_depth
+			print "max stack/queue size:", max_queue_size
 			print "nodes expanded:", expended
 			print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
 			has_answer = 1
 			break
+		expended += 1	
 		upstate = move_up(current.state, n)
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
@@ -88,28 +89,24 @@ def bfs(init_state, success_state, n):
 			up_node.steps = current.steps[:]
 			up_node.steps.append("UP")
 			queue.append(up_node)
-			expended += 1
 		if downstate != None and downstate not in d:
 			d[downstate] = 1
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
 			down_node.steps.append("DOWN")
 			queue.append(down_node)
-			expended += 1
 		if leftstate != None and leftstate not in d:
 			d[leftstate] = 1
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
 			left_node.steps.append("LEFT")
 			queue.append(left_node)
-			expended += 1
 		if rightstate != None and rightstate not in d:
 			d[rightstate] = 1
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
 			right_node.steps.append("RIGHT")
 			queue.append(right_node)
-			expended += 1		
 	if has_answer == 0:
 		print "No Successful Way"
 
@@ -119,13 +116,13 @@ def dfs(init_state, success_state, n):
 	init_node = node(init_state)
 	d = {init_state:1}
 	stack = [init_node]
-	max_stack_depth = 1
+	max_stack_size = 1
 	expended = 0
 	has_answer = 0
 	start = datetime.datetime.now()
 	while(len(stack) > 0):
-		if len(stack) > max_stack_depth:
-			max_stack_depth = len(stack)
+		if len(stack) > max_stack_size:
+			max_stack_size = len(stack)
 		current = stack.pop()
 		if current.state == success_state:
 			print "DFS Finished"
@@ -135,11 +132,12 @@ def dfs(init_state, success_state, n):
 			diff = end - start
 			print "elapsed time:", diff.total_seconds() * 1000, "ms"
 			print "depth of stack/queue:", len(current.steps)+1
-			print "max depth of stack/queue:", max_stack_depth
+			print "max stack/queue size:", max_stack_size
 			print "nodes expanded:", expended
 			print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
 			has_answer = 1
 			break
+		expended += 1
 		upstate = move_up(current.state, n)
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
@@ -151,28 +149,24 @@ def dfs(init_state, success_state, n):
 			right_node.steps = current.steps[:]
 			right_node.steps.append("RIGHT")
 			stack.append(right_node)
-			expended += 1
 		if leftstate != None and leftstate not in d:
 			d[leftstate] = 1
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
 			left_node.steps.append("LEFT")
 			stack.append(left_node)
-			expended += 1
 		if downstate != None and downstate not in d:
 			d[downstate] = 1
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
 			down_node.steps.append("DOWN")
 			stack.append(down_node)
-			expended += 1	
 		if upstate != None and upstate not in d:
 			d[upstate] = 1
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
 			up_node.steps.append("UP")
 			stack.append(up_node)
-			expended += 1			
 	if has_answer == 0:
 		print "No Successful Way"
 
@@ -201,13 +195,13 @@ def a_star(init_state, success_state, n, heuristic):
 	queue = Q.PriorityQueue()
 	distance = 0 + heuristic(init_state, success_state, n)
 	queue.put((distance, init_node))
-	max_queue_depth = 1
+	max_queue_size = 1
 	expended = 0
 	has_answer = 0
 	start = datetime.datetime.now()
 	while not queue.empty():
-		if queue.qsize() > max_queue_depth:
-			max_queue_depth = queue.qsize()
+		if queue.qsize() > max_queue_size:
+			max_queue_size = queue.qsize()
 		distance, current = queue.get()
 		if current.state == success_state:
 			print "A* Finished"
@@ -218,11 +212,12 @@ def a_star(init_state, success_state, n, heuristic):
 			diff = end - start
 			print "elapsed time:", diff.total_seconds() * 1000, "ms"
 			print "depth of stack/queue:", len(current.steps)+1
-			print "max depth of stack/queue:", max_queue_depth
+			print "max stack/queue size:", max_queue_size
 			print "nodes expanded:", expended
 			print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
 			has_answer = 1
 			break
+		expended += 1	
 		upstate = move_up(current.state, n)
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
@@ -234,7 +229,6 @@ def a_star(init_state, success_state, n, heuristic):
 			up_node.steps.append("UP")
 			distance = len(up_node.steps) + heuristic(upstate, success_state, n)
 			queue.put((distance, up_node))
-			expended += 1
 		if downstate != None and downstate not in d:
 			d[downstate] = 1
 			down_node = node(downstate)
@@ -242,7 +236,6 @@ def a_star(init_state, success_state, n, heuristic):
 			down_node.steps.append("DOWN")
 			distance = len(down_node.steps) + heuristic(downstate, success_state, n)
 			queue.put((distance, down_node))
-			expended += 1
 		if leftstate != None and leftstate not in d:
 			d[leftstate] = 1
 			left_node = node(leftstate)
@@ -250,7 +243,6 @@ def a_star(init_state, success_state, n, heuristic):
 			left_node.steps.append("LEFT")
 			distance = len(left_node.steps) + heuristic(leftstate, success_state, n)
 			queue.put((distance, left_node))
-			expended += 1
 		if rightstate != None and rightstate not in d:
 			d[rightstate] = 1
 			right_node = node(rightstate)
@@ -258,7 +250,6 @@ def a_star(init_state, success_state, n, heuristic):
 			right_node.steps.append("RIGHT")
 			distance = len(right_node.steps) + heuristic(rightstate, success_state, n)
 			queue.put((distance, right_node))
-			expended += 1		
 	if has_answer == 0:
 		print "No Successful Way"
 
@@ -271,14 +262,14 @@ def ida_star(init_state, success_state, n, heuristic):
 	while(1):
 		d = {init_state:1}
 		stack = [init_node]
-		max_stack_depth = 1
+		max_stack_size = 1
 		expended = 0
 		bound = min(bound_list) 
 		bound_list = []
 
 		while(len(stack) > 0):
-			if len(stack) > max_stack_depth:
-				max_stack_depth = len(stack)
+			if len(stack) > max_stack_size:
+				max_stack_size = len(stack)
 			current = stack.pop()
 			distance = len(current.steps) + heuristic(current.state, success_state, n)
 			if distance > bound:
@@ -293,11 +284,11 @@ def ida_star(init_state, success_state, n, heuristic):
 				diff = end - start
 				print "elapsed time:", diff.total_seconds() * 1000, "ms"
 				print "depth of stack/queue:", len(current.steps)+1
-				print "max depth of stack/queue:", max_stack_depth
+				print "max stack/queue size:", max_stack_size
 				print "nodes expanded:", expended
 				print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
 				return 
-
+			expended += 1
 			upstate = move_up(current.state, n)
 			downstate = move_down(current.state, n)
 			leftstate = move_left(current.state, n)
@@ -312,7 +303,6 @@ def ida_star(init_state, success_state, n, heuristic):
 					right_node.steps = current.steps[:]
 					right_node.steps.append("RIGHT")
 					stack.append(right_node)
-					expended += 1
 			if leftstate != None:
 				if leftstate in d and d[leftstate] < len(current.steps) + 1:
 					pass
@@ -322,7 +312,6 @@ def ida_star(init_state, success_state, n, heuristic):
 					left_node.steps = current.steps[:]
 					left_node.steps.append("LEFT")
 					stack.append(left_node)
-					expended += 1
 			if downstate != None:
 				if downstate in d and d[downstate] < len(current.steps) + 1:
 					pass
@@ -332,7 +321,6 @@ def ida_star(init_state, success_state, n, heuristic):
 					down_node.steps = current.steps[:]
 					down_node.steps.append("DOWN")
 					stack.append(down_node)
-					expended += 1	
 			if upstate != None:
 				if upstate in d and d[upstate] < len(current.steps) + 1:
 					pass
@@ -342,7 +330,6 @@ def ida_star(init_state, success_state, n, heuristic):
 					up_node.steps = current.steps[:]
 					up_node.steps.append("UP")
 					stack.append(up_node)
-					expended += 1	
 		
 
 def main():
