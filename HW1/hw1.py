@@ -304,33 +304,45 @@ def ida_star(init_state, success_state, n, heuristic):
 			rightstate = move_right(current.state, n)
 
 			if rightstate != None:
-				d[rightstate] = 1
-				right_node = node(rightstate)
-				right_node.steps = current.steps[:]
-				right_node.steps.append("RIGHT")
-				stack.append(right_node)
-				expended += 1
+				if rightstate in d and d[rightstate] < len(current.steps) + 1:
+					pass
+				else:	
+					d[rightstate] = len(current.steps) + 1
+					right_node = node(rightstate)
+					right_node.steps = current.steps[:]
+					right_node.steps.append("RIGHT")
+					stack.append(right_node)
+					expended += 1
 			if leftstate != None:
-				d[leftstate] = 1
-				left_node = node(leftstate)
-				left_node.steps = current.steps[:]
-				left_node.steps.append("LEFT")
-				stack.append(left_node)
-				expended += 1
+				if leftstate in d and d[leftstate] < len(current.steps) + 1:
+					pass
+				else:
+					d[leftstate] = len(current.steps) + 1
+					left_node = node(leftstate)
+					left_node.steps = current.steps[:]
+					left_node.steps.append("LEFT")
+					stack.append(left_node)
+					expended += 1
 			if downstate != None:
-				d[downstate] = 1
-				down_node = node(downstate)
-				down_node.steps = current.steps[:]
-				down_node.steps.append("DOWN")
-				stack.append(down_node)
-				expended += 1	
+				if downstate in d and d[downstate] < len(current.steps) + 1:
+					pass
+				else:
+					d[downstate] = len(current.steps) + 1
+					down_node = node(downstate)
+					down_node.steps = current.steps[:]
+					down_node.steps.append("DOWN")
+					stack.append(down_node)
+					expended += 1	
 			if upstate != None:
-				d[upstate] = 1
-				up_node = node(upstate)
-				up_node.steps = current.steps[:]
-				up_node.steps.append("UP")
-				stack.append(up_node)
-				expended += 1	
+				if upstate in d and d[upstate] < len(current.steps) + 1:
+					pass
+				else:
+					d[upstate] = len(current.steps) + 1
+					up_node = node(upstate)
+					up_node.steps = current.steps[:]
+					up_node.steps.append("UP")
+					stack.append(up_node)
+					expended += 1	
 		
 
 def main():
@@ -358,7 +370,7 @@ def main():
 ,212, 152, 180, 198, 200, 201, 202, 187, 203, 204, 205, 206, 207, 208, 209
 ,197, 182, 211, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224]
 	'''
-	
+	'''
 	init = [1, 2, 3, 11, 12, 6, 7, 15
 ,8, 9, 10, 20, 4, 22, 5, 13
 ,16, 17, 18, 19, 21, 29, 14, 23
@@ -367,7 +379,7 @@ def main():
 ,40, 41, 42, 43, 44, 38, 47, 54
 ,48, 49, 50, 51, 52, 45, 53, 63
 ,56, 57, 58, 59, 60, 61, 0, 62]
-	
+	'''
 	init_state = ",".join(map(str,init))
 	success_state = ",".join(map(str,success))
 	try:
