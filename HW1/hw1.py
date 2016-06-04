@@ -370,17 +370,17 @@ def main():
 	
 	init_state = ",".join(map(str,init))
 	success_state = ",".join(map(str,success))
-	#try:
-	if sys.argv[2] == 'bfs':
-		bfs(init_state, success_state, n)
-	elif sys.argv[2] == 'dfs': 	
-		dfs(init_state, success_state, n)
-	elif sys.argv[2] == 'astar': 
-		a_star(init_state, success_state, n, manhattan_distance)
-	elif sys.argv[2] == 'idastar': 
-		ida_star(init_state, success_state, n, manhattan_distance)	
-	else:
-		print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"	
-	#except IndexError:
-	#	print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"		
+	try:
+		if sys.argv[2] == 'bfs':
+			bfs(init_state, success_state, n)
+		elif sys.argv[2] == 'dfs': 	
+			dfs(init_state, success_state, n)
+		elif sys.argv[2] == 'astar': 
+			a_star(init_state, success_state, n, manhattan_distance)
+		elif sys.argv[2] == 'idastar': 
+			ida_star(init_state, success_state, n, manhattan_distance)	
+		else:
+			print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"	
+	except IndexError:
+		print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"		
 main()		

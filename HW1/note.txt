@@ -1,0 +1,5 @@
+note:
+
+IDA* can't skip duplicate state, it might miss a shorter way to reach that state
+
+however A* and DFS can skip 
