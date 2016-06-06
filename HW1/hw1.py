@@ -52,6 +52,19 @@ def move_right(state, n):
 		state_list[index], state_list[index+1] = state_list[index+1], state_list[index]
 		return ",".join(state_list)
 
+def print_path(steps):
+	r = ""
+	for i in steps:
+		if i == 0:
+			r += ", UP"
+		elif i == 1:
+			r += ", DOWN"
+		elif i == 2:
+			r += ", LEFT"
+		elif i == 3:
+			r += ", RIGHT"
+	return r		
+
 def bfs(init_state, success_state, n):
 	print " <-- BFS search -->"
 	init_node = node(init_state)
@@ -123,20 +136,8 @@ def dfs(init_state, success_state, n):
 		if len(stack) > max_stack_size:
 			max_stack_size = len(stack)
 		current = stack.pop()
-		if current.state in s:
-			continue
-		s.add(current.state)	
+			
 		if current.state == success_state:
-			print "DFS Finished"
-			print current.steps 
-			print "steps: %d" % len(current.steps)
-			end = datetime.datetime.now()
-			diff = end - start
-			print "elapsed time:", diff.total_seconds() * 1000, "ms"
-			print "depth of stack/queue:", len(current.steps)+1
-			print "max stack/queue size:", max_stack_size
-			print "nodes expanded:", expended
-			print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
 			has_answer = 1
 			break
 		expended += 1
@@ -144,28 +145,60 @@ def dfs(init_state, success_state, n):
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
 		rightstate = move_right(current.state, n)
-		if rightstate != None : 
+		if rightstate != None and rightstate not in s: 
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
-			right_node.steps.append("RIGHT")
+			right_node.steps.append(3)
+			if rightstate == success_state:
+				current = right_node
+				has_answer = 1
+				break
+			s.add(rightstate)	
 			stack.append(right_node)
-		if leftstate != None :
+		if leftstate != None and leftstate not in s:
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
-			left_node.steps.append("LEFT")
+			left_node.steps.append(2)
+			if leftstate == success_state:
+				current = left_node
+				has_answer = 1
+				break
+			s.add(leftstate)	
 			stack.append(left_node)
-		if downstate != None :
+		if downstate != None and downstate not in s:
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
-			down_node.steps.append("DOWN")
+			down_node.steps.append(1)
+			if downstate == success_state:
+				current = down_node
+				has_answer = 1
+				break
+			s.add(downstate)	
 			stack.append(down_node)
-		if upstate != None :
+		if upstate != None and upstate not in s:
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
-			up_node.steps.append("UP")
+			up_node.steps.append(0)
+			if upstate == success_state:
+				current = up_node
+				has_answer = 1
+				break
+			s.add(upstate)	
 			stack.append(up_node)
 	if has_answer == 0:
 		print "No Successful Way"
+	else:
+		print "DFS Finished"
+		print print_path(current.steps) 
+		print "steps: %d" % len(current.steps)
+		end = datetime.datetime.now()
+		diff = end - start
+		print "elapsed time:", diff.total_seconds() * 1000, "ms"
+		print "depth of stack/queue:", len(current.steps)+1
+		print "max stack/queue size:", max_stack_size
+		print "nodes expanded:", expended
+		print "maximum memory usage:", (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000), "(bytes on OS X, kilobytes on Linux)"
+		
 
 def misplaced(a, b, n):
 	la = a.split(',')
