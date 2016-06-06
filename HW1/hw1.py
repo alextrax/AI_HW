@@ -55,7 +55,7 @@ def move_right(state, n):
 def bfs(init_state, success_state, n):
 	print " <-- BFS search -->"
 	init_node = node(init_state)
-	d = {init_state:1}
+	s = set()
 	queue = [init_node]
 	max_queue_size = 1
 	expended = 0
@@ -65,7 +65,6 @@ def bfs(init_state, success_state, n):
 		if len(queue) > max_queue_size:
 			max_queue_size = len(queue)
 		current = queue.pop(0)
-		current = stack.pop()
 		if current.state in s:
 			continue
 		s.add(current.state)
@@ -87,26 +86,22 @@ def bfs(init_state, success_state, n):
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
 		rightstate = move_right(current.state, n)
-		if upstate != None and upstate not in d:
-			d[upstate] = 1
+		if upstate != None:
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
 			up_node.steps.append("UP")
 			queue.append(up_node)
-		if downstate != None and downstate not in d:
-			d[downstate] = 1
+		if downstate != None:
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
 			down_node.steps.append("DOWN")
 			queue.append(down_node)
-		if leftstate != None and leftstate not in d:
-			d[leftstate] = 1
+		if leftstate != None:
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
 			left_node.steps.append("LEFT")
 			queue.append(left_node)
-		if rightstate != None and rightstate not in d:
-			d[rightstate] = 1
+		if rightstate != None:
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
 			right_node.steps.append("RIGHT")
@@ -193,7 +188,7 @@ def manhattan_distance(a, b, n):
 def a_star(init_state, success_state, n, heuristic):
 	print " <-- A* search -->"
 	init_node = node(init_state)
-	d = {init_state:1}
+	s = set()
 	queue = Q.PriorityQueue()
 	distance = 0 + heuristic(init_state, success_state, n)
 	queue.put((distance, init_node))
@@ -205,6 +200,9 @@ def a_star(init_state, success_state, n, heuristic):
 		if queue.qsize() > max_queue_size:
 			max_queue_size = queue.qsize()
 		distance, current = queue.get()
+		if current.state in s:
+			continue
+		s.add(current.state)
 		if current.state == success_state:
 			print "A* Finished"
 			print "Heuristic method:", heuristic.__name__
@@ -224,29 +222,25 @@ def a_star(init_state, success_state, n, heuristic):
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
 		rightstate = move_right(current.state, n)
-		if upstate != None and upstate not in d:
-			d[upstate] = 1
+		if upstate != None:
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
 			up_node.steps.append("UP")
 			distance = len(up_node.steps) + heuristic(upstate, success_state, n)
 			queue.put((distance, up_node))
-		if downstate != None and downstate not in d:
-			d[downstate] = 1
+		if downstate != None:
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
 			down_node.steps.append("DOWN")
 			distance = len(down_node.steps) + heuristic(downstate, success_state, n)
 			queue.put((distance, down_node))
-		if leftstate != None and leftstate not in d:
-			d[leftstate] = 1
+		if leftstate != None:
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
 			left_node.steps.append("LEFT")
 			distance = len(left_node.steps) + heuristic(leftstate, success_state, n)
 			queue.put((distance, left_node))
-		if rightstate != None and rightstate not in d:
-			d[rightstate] = 1
+		if rightstate != None:
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
 			right_node.steps.append("RIGHT")
@@ -273,6 +267,10 @@ def ida_star(init_state, success_state, n, heuristic):
 			if len(stack) > max_stack_size:
 				max_stack_size = len(stack)
 			current = stack.pop()
+			if current.state in d and d[current.state] < len(current.steps):
+				continue
+			d[current.state] = len(current.steps)
+				
 			distance = len(current.steps) + heuristic(current.state, success_state, n)
 			if distance > bound:
 				bound_list.append(distance)
@@ -296,42 +294,26 @@ def ida_star(init_state, success_state, n, heuristic):
 			leftstate = move_left(current.state, n)
 			rightstate = move_right(current.state, n)
 
-			if rightstate != None:
-				if rightstate in d and d[rightstate] < len(current.steps) + 1:
-					pass
-				else:	
-					d[rightstate] = len(current.steps) + 1
-					right_node = node(rightstate)
-					right_node.steps = current.steps[:]
-					right_node.steps.append("RIGHT")
-					stack.append(right_node)
+			if rightstate != None:	
+				right_node = node(rightstate)
+				right_node.steps = current.steps[:]
+				right_node.steps.append("RIGHT")
+				stack.append(right_node)
 			if leftstate != None:
-				if leftstate in d and d[leftstate] < len(current.steps) + 1:
-					pass
-				else:
-					d[leftstate] = len(current.steps) + 1
-					left_node = node(leftstate)
-					left_node.steps = current.steps[:]
-					left_node.steps.append("LEFT")
-					stack.append(left_node)
+				left_node = node(leftstate)
+				left_node.steps = current.steps[:]
+				left_node.steps.append("LEFT")
+				stack.append(left_node)
 			if downstate != None:
-				if downstate in d and d[downstate] < len(current.steps) + 1:
-					pass
-				else:
-					d[downstate] = len(current.steps) + 1
-					down_node = node(downstate)
-					down_node.steps = current.steps[:]
-					down_node.steps.append("DOWN")
-					stack.append(down_node)
+				down_node = node(downstate)
+				down_node.steps = current.steps[:]
+				down_node.steps.append("DOWN")
+				stack.append(down_node)
 			if upstate != None:
-				if upstate in d and d[upstate] < len(current.steps) + 1:
-					pass
-				else:
-					d[upstate] = len(current.steps) + 1
-					up_node = node(upstate)
-					up_node.steps = current.steps[:]
-					up_node.steps.append("UP")
-					stack.append(up_node)
+				up_node = node(upstate)
+				up_node.steps = current.steps[:]
+				up_node.steps.append("UP")
+				stack.append(up_node)
 		
 def check_initstate(init, n):
 	for i in init:
@@ -346,8 +328,8 @@ def main():
 	#init = random.sample(range(n*n), n*n)
 	#init = [7,2,4,5,0,6,8,3,1]
 	#init = [3,1,2,6,4,5,7,8,0]
-	#init = [0,8,7,6,5,4,3,2,1]
-	init = [1,2,5,3,4,0,6,7,8]
+	init = [0,8,7,6,5,4,3,2,1]
+	#init = [1,2,5,3,4,0,6,7,8]
 	'''
 	init = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 ,30, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
@@ -395,15 +377,5 @@ def main():
 	except IndexError:
 		print "Usage: python hw1.py [degree of puzzle] [bfs/dfs/astar/idastar]"		
 main()		
-'''
-test = "3,1,2,0,4,5,6,7,8"
-print move_up(test, 3)
-test = "1,2,0,3,4,5,6,7,8"
-print move_down(test, 3)
-test = "1,2,5,3,4,0,6,7,8"
-print move_left(test, 3)
-test = "1,2,5,3,0,4,6,7,8"
-print move_right(test, 3)
-'''
 
 
