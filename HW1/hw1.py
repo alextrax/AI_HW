@@ -65,6 +65,10 @@ def bfs(init_state, success_state, n):
 		if len(queue) > max_queue_size:
 			max_queue_size = len(queue)
 		current = queue.pop(0)
+		current = stack.pop()
+		if current.state in s:
+			continue
+		s.add(current.state)
 		if current.state == success_state:
 			print "BFS Finished"
 			print current.steps 
@@ -114,7 +118,7 @@ def bfs(init_state, success_state, n):
 def dfs(init_state, success_state, n):
 	print " <-- DFS search -->"
 	init_node = node(init_state)
-	d = {init_state:1}
+	s = set()
 	stack = [init_node]
 	max_stack_size = 1
 	expended = 0
@@ -124,6 +128,9 @@ def dfs(init_state, success_state, n):
 		if len(stack) > max_stack_size:
 			max_stack_size = len(stack)
 		current = stack.pop()
+		if current.state in s:
+			continue
+		s.add(current.state)	
 		if current.state == success_state:
 			print "DFS Finished"
 			print current.steps 
@@ -142,27 +149,22 @@ def dfs(init_state, success_state, n):
 		downstate = move_down(current.state, n)
 		leftstate = move_left(current.state, n)
 		rightstate = move_right(current.state, n)
-		
-		if rightstate != None and rightstate not in d:
-			d[rightstate] = 1
+		if rightstate != None : 
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
 			right_node.steps.append("RIGHT")
 			stack.append(right_node)
-		if leftstate != None and leftstate not in d:
-			d[leftstate] = 1
+		if leftstate != None :
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
 			left_node.steps.append("LEFT")
 			stack.append(left_node)
-		if downstate != None and downstate not in d:
-			d[downstate] = 1
+		if downstate != None :
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
 			down_node.steps.append("DOWN")
 			stack.append(down_node)
-		if upstate != None and upstate not in d:
-			d[upstate] = 1
+		if upstate != None :
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
 			up_node.steps.append("UP")
@@ -259,10 +261,10 @@ def ida_star(init_state, success_state, n, heuristic):
 	bound = 0 + heuristic(init_state, success_state, n)
 	bound_list = [bound]
 	start = datetime.datetime.now()
+	max_stack_size = 1
 	while(1):
 		d = {init_state:1}
 		stack = [init_node]
-		max_stack_size = 1
 		expended = 0
 		bound = min(bound_list) 
 		bound_list = []
@@ -344,7 +346,8 @@ def main():
 	#init = random.sample(range(n*n), n*n)
 	#init = [7,2,4,5,0,6,8,3,1]
 	#init = [3,1,2,6,4,5,7,8,0]
-	init = [0,8,7,6,5,4,3,2,1]
+	#init = [0,8,7,6,5,4,3,2,1]
+	init = [1,2,5,3,4,0,6,7,8]
 	'''
 	init = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 ,30, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
@@ -392,3 +395,15 @@ def main():
 	except IndexError:
 		print "Usage: python hw1.py [degree of puzzle] [bfs/dfs/astar/idastar]"		
 main()		
+'''
+test = "3,1,2,0,4,5,6,7,8"
+print move_up(test, 3)
+test = "1,2,0,3,4,5,6,7,8"
+print move_down(test, 3)
+test = "1,2,5,3,4,0,6,7,8"
+print move_left(test, 3)
+test = "1,2,5,3,0,4,6,7,8"
+print move_right(test, 3)
+'''
+
+
