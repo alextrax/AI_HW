@@ -331,15 +331,20 @@ def ida_star(init_state, success_state, n, heuristic):
 					up_node.steps.append("UP")
 					stack.append(up_node)
 		
+def check_initstate(init, n):
+	for i in init:
+		if i >= n*n or i < 0:
+			return False
+	return True		
 
 def main():
 	n = int(sys.argv[1])
 	success = [i for i in range(n*n)] # build success state
 
-	init = random.sample(range(n*n), n*n)
-	init = [7,2,4,5,0,6,8,3,1]
+	#init = random.sample(range(n*n), n*n)
+	#init = [7,2,4,5,0,6,8,3,1]
 	#init = [3,1,2,6,4,5,7,8,0]
-	#init = [0,8,7,6,5,4,3,2,1]
+	init = [0,8,7,6,5,4,3,2,1]
 	'''
 	init = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 ,30, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
@@ -367,6 +372,10 @@ def main():
 ,48, 49, 50, 51, 52, 45, 53, 63
 ,56, 57, 58, 59, 60, 61, 0, 62]
 	'''
+	if check_initstate(init, n) == False:
+		print "invalid initial state"
+		return
+
 	init_state = ",".join(map(str,init))
 	success_state = ",".join(map(str,success))
 	try:
@@ -379,7 +388,7 @@ def main():
 		elif sys.argv[2] == 'idastar': 
 			ida_star(init_state, success_state, n, manhattan_distance)	
 		else:
-			print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"	
+			print "Usage: python hw1.py [degree of puzzle] [bfs/dfs/astar/idastar]"	
 	except IndexError:
-		print "Usage: python hw1.py [dimention] [bfs/dfs/astar/idastar]"		
+		print "Usage: python hw1.py [degree of puzzle] [bfs/dfs/astar/idastar]"		
 main()		
