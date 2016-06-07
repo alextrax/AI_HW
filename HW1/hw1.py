@@ -148,7 +148,7 @@ def dfs(init_state, success_state, n):
 		if rightstate != None and rightstate not in s: 
 			right_node = node(rightstate)
 			right_node.steps = current.steps[:]
-			right_node.steps.append(3)
+			right_node.steps.append("RIGHT")
 			if rightstate == success_state:
 				current = right_node
 				has_answer = 1
@@ -158,7 +158,7 @@ def dfs(init_state, success_state, n):
 		if leftstate != None and leftstate not in s:
 			left_node = node(leftstate)
 			left_node.steps = current.steps[:]
-			left_node.steps.append(2)
+			left_node.steps.append("LEFT")
 			if leftstate == success_state:
 				current = left_node
 				has_answer = 1
@@ -168,7 +168,7 @@ def dfs(init_state, success_state, n):
 		if downstate != None and downstate not in s:
 			down_node = node(downstate)
 			down_node.steps = current.steps[:]
-			down_node.steps.append(1)
+			down_node.steps.append("DOWN")
 			if downstate == success_state:
 				current = down_node
 				has_answer = 1
@@ -178,7 +178,7 @@ def dfs(init_state, success_state, n):
 		if upstate != None and upstate not in s:
 			up_node = node(upstate)
 			up_node.steps = current.steps[:]
-			up_node.steps.append(0)
+			up_node.steps.append("UP")
 			if upstate == success_state:
 				current = up_node
 				has_answer = 1
@@ -189,7 +189,7 @@ def dfs(init_state, success_state, n):
 		print "No Successful Way"
 	else:
 		print "DFS Finished"
-		print print_path(current.steps) 
+		print current.steps
 		print "steps: %d" % len(current.steps)
 		end = datetime.datetime.now()
 		diff = end - start
@@ -360,7 +360,7 @@ def main():
 
 	#init = random.sample(range(n*n), n*n)
 	#init = [7,2,4,5,0,6,8,3,1]
-	#init = [3,1,2,6,4,5,7,8,0]
+	#init = [3,1,2,6,4,5,7,0,8]
 	init = [0,8,7,6,5,4,3,2,1]
 	#init = [1,2,5,3,4,0,6,7,8]
 	'''
