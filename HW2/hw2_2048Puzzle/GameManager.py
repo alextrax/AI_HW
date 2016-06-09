@@ -9,7 +9,7 @@ from random import randint
 import time
 
 defaultInitialTiles = 2
-defaultPossibility = 0.7
+defaultPossibility = 0.9
 (PLAYER_TURN, COMPUTER_TURN) = (0, 1)
 actionDic = {0:"UP", 1:'DOWN', 2:'LEFT', 3:'RIGHT'}
 # time limit for guess time of each step
