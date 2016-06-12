@@ -3,10 +3,11 @@
 
 from Grid import Grid
 from ComputerAI import ComputerAI
-from PlayerAI import PlayerAI
+from PlayerAI import PlayerAI, PlayerAIMiniMax
 from Displayer import Displayer
 from random import randint
 import time
+import sys
 
 defaultInitialTiles = 2
 defaultPossibility = 0.9
@@ -56,7 +57,7 @@ class GameManager:
 		maxTile = 0
 
 		# set init alarm
-		self.lastTime = time.time()
+		self.lastTime = time.clock()
 
 		# check game over conditions
 		while not self.isGameOver() and not self.over:
@@ -85,7 +86,7 @@ class GameManager:
 				print "Computer's turn"
 				move = self.computerAI.getMove(gridCopy)
 				#validate move
-				if self.grid.canInsert(move):
+				if move and self.grid.canInsert(move):
 					self.grid.setCellValue(move, self.getNewTileValue())
 				else:
 					print "Invalid Computer AI Move"
@@ -95,7 +96,7 @@ class GameManager:
 				self.displayer.display(self.grid)
 
 			# once you exceeds the time limit, previous action will be your last action
-			self.updateAlarm(time.time())
+			self.updateAlarm(time.clock())
 			turn = 1 - turn
 		print maxTile
 
@@ -118,11 +119,22 @@ class GameManager:
 
 def main():
 	gameManager = GameManager()
-	playerAI  	= PlayerAI()
 	computerAI  = ComputerAI()
 	displayer 	= Displayer()
 	#set AIs and displayer
 	gameManager.setDisplayer(displayer)
+	try:
+		if sys.argv[1] == "minimax":
+			print "Player AI: MiniMax"
+			playerAI  	= PlayerAIMiniMax()
+		elif sys.argv[1] == "ab":	
+			print "Player AI: MiniMax + alpha beta pruning"
+			playerAI  	= PlayerAI()
+	except:
+		print "Please specify algorithm for Player AI"
+		print "MiniMax: python GameManager.py minimax"
+		print "alpha-beta: python GameManager.py ab" 
+		return	
 	gameManager.setPlayerAI(playerAI)
 	gameManager.setComputerAI(computerAI)
 	# start the game!
