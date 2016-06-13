@@ -19,6 +19,9 @@ smooth_weight = -1.0
 mono_weight = 3.0
 edge_weight = 6.0
 
+hmap = {}
+smap = {}
+
 class PlayerAI(BaseAI):
     def getNewTileValue(self):
         possibility = 0.9
@@ -94,6 +97,10 @@ class PlayerAI(BaseAI):
 
 
     def MixHeuristic(self, grid):
+        encode = str([x for row in grid.map for x in row])
+        if encode in hmap:
+            return hmap[encode]
+
         avail = grid.getAvailableCells()
         empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 1 * empty_weight
         max_tile = grid.getMaxTile() * max_weight
@@ -102,22 +109,123 @@ class PlayerAI(BaseAI):
         mono = self.Monotonic(grid) * mono_weight
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
-        return empty_count + smooth_diff + smooth_val + mono + edge
+        score = empty_count + smooth_diff + smooth_val + mono + edge
+        hmap[encode] = score
+        return score
         #return mono + empty_count + max_tile
         #return len(grid.getAvailableCells()) + \
         #       math.log(grid.getMaxTile(), 2) + \
         #       self.SameValue(grid) 
+
+    def RowColHeuristic(self, row):
+        # smoothness
+        score_val = 0
+        score_diff = 0
+        for i in xrange(len(row)-1):             
+            if row[i] == row[i+1]:
+                score_val +=  math.log(row[i], 2) if row[i] > 0 else 0
+            
+            if row[i] > 0 and row[i+1] > 0:
+                score_diff += abs(math.log(row[i], 2) - math.log(row[i+1], 2)) if row[i] != row[i+1] else 0
+
+
+        # monotonic
+        mono_l = 0
+        mono_r = 0
+
+        # non_increasing
+        if all(x>=y for x, y in zip(row[:len(row)-1], row[1:])):
+            mono_l += 1
+
+        # non_decreasing 
+        elif all(x<=y for x, y in zip(row[:len(row)-1], row[1:])):
+            mono_r += 1 
+        return max(mono_l, mono_r) * mono_weight, score_diff, score_val                 
+
+    def SepHeuristic(self, grid):
+        SepScore = 0
+        for row in grid.map:
+            rstring = str(row)
+            if rstring in smap:
+                #print "row hit", rstring
+                SepScore += smap[rstring]
+            else:    
+                mono, smooth_diff, smooth_val = self.RowColHeuristic(row)
+                smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
+                smap[rstring] = mono + smooth_diff + smooth_val
+                SepScore += mono + smooth_diff + smooth_val
+
+
+        for i in xrange(grid.size):
+            col = [row[i] for row in grid.map]
+            cstring = str(col)
+            if cstring in smap:
+                #print "col hit", cstring
+                SepScore += smap[cstring]
+            else:    
+                mono, smooth_diff, smooth_val = self.RowColHeuristic(col)
+                smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
+                smap[cstring] = mono + smooth_diff + smooth_val
+                SepScore += mono + smooth_diff + smooth_val
+
+        
+
+        avail = grid.getAvailableCells()
+        empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 1 * empty_weight
+        #max_tile = grid.getMaxTile() * max_weight
+        edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
+        #print empty_count, max_tile, smooth, mono, edge
+        score = empty_count + SepScore + edge
+        return score
 
     def debug_heuristic(self, grid):
         avail = grid.getAvailableCells()
         empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 1 * empty_weight
         max_tile = grid.getMaxTile() * max_weight
         smooth_diff, smooth_val = self.Smoothness(grid) 
-        smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1 
+        smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
+        smooth_diff *= smooth_weight
         mono = self.Monotonic(grid) * mono_weight
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         print "empty:", empty_count, "max:", max_tile, "smooth_diff:", smooth_diff, "smooth_val:", smooth_val, "mono:", mono, "edge", edge
         print "score", empty_count + smooth_diff + smooth_val + mono + edge
+        
+
+    def debug_SepHeuristic(self, grid):
+        SepScore = 0
+        mono_debug = 0
+        smooth_diff_debug = 0
+        smooth_val_debug = 0
+        for row in grid.map:
+            mono, smooth_diff, smooth_val = self.RowColHeuristic(row)
+            smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
+            smooth_diff *= smooth_weight
+            SepScore += mono + smooth_diff + smooth_val
+            mono_debug += mono
+            smooth_diff_debug += smooth_diff
+            smooth_val_debug += smooth_val
+        #print "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug
+        for i in xrange(grid.size):
+            col = [row[i] for row in grid.map]
+            mono, smooth_diff, smooth_val = self.RowColHeuristic(col)
+            smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
+            smooth_diff *= smooth_weight
+            SepScore += mono + smooth_diff + smooth_val
+            mono_debug += mono
+            smooth_diff_debug += smooth_diff
+            smooth_val_debug += smooth_val
+        #print "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug
+
+        
+
+        avail = grid.getAvailableCells()
+        empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 1 * empty_weight
+        #max_tile = grid.getMaxTile() * max_weight
+        edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
+        #print empty_count, max_tile, smooth, mono, edge
+        score = empty_count + SepScore + edge
+        print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge
+        print "score from SepHeuristic", score
 
     def getMove(self, grid):
         #moves = grid.getAvailableMoves()
@@ -131,7 +239,7 @@ class PlayerAI(BaseAI):
         result = 0
         while (time.time() - self.start) < TIME_LIMIT:
             depth += 1
-            d, v = self.search(grid, depth, -1, MAX_VALUE, True, self.MixHeuristic)
+            d, v = self.search(grid, depth, -1, MAX_VALUE, True, self.SepHeuristic)
             if d == -1 and v == -1:
                 break
             else:
@@ -142,7 +250,8 @@ class PlayerAI(BaseAI):
             print "search time:",time.time() - self.start 
             debugGrid = grid.clone()
             debugGrid.move(result)
-            self.debug_heuristic(debugGrid)
+            #self.debug_heuristic(debugGrid)
+            self.debug_SepHeuristic(debugGrid)
             if result not in grid.getAvailableMoves():
                 print "direction", result, "not available"
                 return 0
