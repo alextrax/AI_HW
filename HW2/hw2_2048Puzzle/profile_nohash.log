@@ -1,0 +1,192 @@
+290739656 function calls (255642818 primitive calls) in 183.600 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 BaseAI.py:4(<module>)
+        1    0.000    0.000    0.000    0.000 BaseAI.py:4(BaseAI)
+        1    0.000    0.000    0.000    0.000 BaseDisplayer.py:4(<module>)
+        1    0.000    0.000    0.000    0.000 BaseDisplayer.py:4(BaseDisplayer)
+        1    0.002    0.002    0.018    0.018 ComputerAI.py:4(<module>)
+        1    0.000    0.000    0.000    0.000 ComputerAI.py:7(ComputerAI)
+      897    0.003    0.000    0.024    0.000 ComputerAI.py:8(getMove)
+        1    0.000    0.000    0.000    0.000 Displayer.py:28(Displayer)
+        1    0.000    0.000    0.043    0.043 Displayer.py:29(__init__)
+        1    0.002    0.002    0.015    0.015 Displayer.py:3(<module>)
+     1795    0.401    0.000    0.418    0.000 Displayer.py:45(unixDisplay)
+     1795    0.004    0.000    0.097    0.000 GameManager.py:104(isGameOver)
+      899    0.003    0.000    0.007    0.000 GameManager.py:107(getNewTileValue)
+        2    0.000    0.000    0.000    0.000 GameManager.py:113(insertRandonTile)
+        1    0.000    0.000  183.434  183.434 GameManager.py:120(main)
+        1    0.000    0.000    0.000    0.000 GameManager.py:19(GameManager)
+        1    0.000    0.000    0.000    0.000 GameManager.py:20(__init__)
+        1    0.000    0.000    0.000    0.000 GameManager.py:31(setComputerAI)
+        1    0.000    0.000    0.000    0.000 GameManager.py:34(setPlayerAI)
+        1    0.000    0.000    0.000    0.000 GameManager.py:37(setDisplayer)
+        1    0.008    0.008  183.600  183.600 GameManager.py:4(<module>)
+     1794    0.004    0.000    0.004    0.000 GameManager.py:40(updateAlarm)
+        1    0.059    0.059  183.391  183.391 GameManager.py:47(start)
+        1    0.000    0.000    0.000    0.000 Grid.py:10(Grid)
+     2692    0.060    0.000    0.132    0.000 Grid.py:109(canMove)
+  1450365    4.317    0.000    4.317    0.000 Grid.py:11(__init__)
+   290002    2.601    0.000  137.030    0.000 Grid.py:130(getAvailableMoves)
+   189642    0.139    0.000    0.139    0.000 Grid.py:138(crossBound)
+   189642    0.196    0.000    0.335    0.000 Grid.py:141(getCellValue)
+  1450364    4.664    0.000  117.892    0.000 Grid.py:16(clone)
+   164504    0.097    0.000    0.097    0.000 Grid.py:26(setCellValue)
+        1    0.002    0.002    0.003    0.003 Grid.py:3(<module>)
+   239087    1.602    0.000    1.811    0.000 Grid.py:30(getAvailableCells)
+   380667    2.998    0.000    4.414    0.000 Grid.py:39(getMaxTile)
+   164502    0.149    0.000    0.449    0.000 Grid.py:47(canInsert)
+  1285862    2.288    0.000   45.053    0.000 Grid.py:51(move)
+   654723   12.543    0.000   21.883    0.000 Grid.py:63(moveUD)
+   631139   12.044    0.000   20.882    0.000 Grid.py:81(moveLR)
+  5143448    7.746    0.000    9.854    0.000 Grid.py:99(merge)
+    20377    0.284    0.000    0.459    0.000 PlayerAI.py:142(RowColHeuristic)
+    65865    0.027    0.000    0.027    0.000 PlayerAI.py:159(<genexpr>)
+    32991    0.011    0.000    0.011    0.000 PlayerAI.py:163(<genexpr>)
+   188988    4.804    0.000   11.185    0.000 PlayerAI.py:167(SepHeuristic)
+     1794    0.092    0.000    0.408    0.000 PlayerAI.py:221(debug_SepHeuristic)
+      897    0.081    0.000  182.446    0.203 PlayerAI.py:260(getMove)
+        1    0.000    0.000    0.000    0.000 PlayerAI.py:27(PlayerAI)
+        1    0.000    0.000    0.000    0.000 PlayerAI.py:28(__init__)
+292167/4502    3.128    0.000  180.224    0.040 PlayerAI.py:296(search)
+        1    0.000    0.000    0.000    0.000 PlayerAI.py:341(PlayerAIMiniMax)
+        1    0.004    0.004    0.013    0.013 PlayerAI.py:4(<module>)
+        1    0.000    0.000    0.108    0.108 PlayerAI.py:40(__del__)
+   163605    0.274    0.000    1.105    0.000 PlayerAI.py:47(getNewTileValue)
+   190782    0.376    0.000    0.376    0.000 PlayerAI.py:58(OnEdge)
+        1    0.000    0.000    0.000    0.000 __future__.py:48(<module>)
+        1    0.000    0.000    0.000    0.000 __future__.py:74(_Feature)
+        7    0.000    0.000    0.000    0.000 __future__.py:75(__init__)
+        1    0.018    0.018    0.108    0.108 __init__.py:122(dump)
+        1    0.003    0.003    0.009    0.009 __init__.py:99(<module>)
+30457644/1450364   47.108    0.000  108.911    0.000 copy.py:145(deepcopy)
+ 11113933    1.828    0.000    1.828    0.000 copy.py:198(_deepcopy_atomic)
+7251820/1450364   22.638    0.000  103.377    0.000 copy.py:226(_deepcopy_list)
+ 18365753   16.284    0.000   21.542    0.000 copy.py:267(_keep_alive)
+        1    0.000    0.000    0.000    0.000 decoder.py:17(_floatconstants)
+        1    0.001    0.001    0.004    0.004 decoder.py:2(<module>)
+        1    0.000    0.000    0.000    0.000 decoder.py:272(JSONDecoder)
+        1    0.000    0.000    0.000    0.000 decoder.py:302(__init__)
+        2    0.000    0.000    0.000    0.000 encoder.py:101(__init__)
+        1    0.000    0.000    0.002    0.002 encoder.py:2(<module>)
+        1    0.000    0.000    0.000    0.000 encoder.py:212(iterencode)
+     6025    0.005    0.000    0.011    0.000 encoder.py:236(floatstr)
+        1    0.000    0.000    0.000    0.000 encoder.py:272(_make_iterencode)
+    24104    0.028    0.000    0.063    0.000 encoder.py:341(_iterencode_dict)
+     6025    0.001    0.000    0.001    0.000 encoder.py:361(<lambda>)
+    24104    0.012    0.000    0.075    0.000 encoder.py:417(_iterencode)
+        1    0.000    0.000    0.000    0.000 encoder.py:70(JSONEncoder)
+        6    0.000    0.000    0.000    0.000 hashlib.py:100(__get_openssl_constructor)
+        1    0.009    0.009    0.009    0.009 hashlib.py:56(<module>)
+        1    0.000    0.000    0.013    0.013 platform.py:10(<module>)
+        1    0.000    0.000    0.043    0.043 platform.py:1119(uname)
+        1    0.000    0.000    0.043    0.043 platform.py:1256(system)
+        1    0.000    0.000    0.000    0.000 platform.py:367(_popen)
+        1    0.000    0.000    0.043    0.043 platform.py:953(_syscmd_uname)
+        1    0.000    0.000    0.001    0.001 random.py:100(seed)
+   165403    0.599    0.000    0.642    0.000 random.py:175(randrange)
+   165403    0.200    0.000    0.843    0.000 random.py:238(randint)
+        1    0.006    0.006    0.016    0.016 random.py:40(<module>)
+        1    0.000    0.000    0.000    0.000 random.py:655(WichmannHill)
+        1    0.000    0.000    0.000    0.000 random.py:72(Random)
+        1    0.000    0.000    0.000    0.000 random.py:805(SystemRandom)
+        1    0.000    0.000    0.001    0.001 random.py:91(__init__)
+       16    0.000    0.000    0.016    0.001 re.py:192(compile)
+       16    0.000    0.000    0.016    0.001 re.py:230(_compile)
+        1    0.001    0.001    0.002    0.002 scanner.py:2(<module>)
+    10161    0.008    0.000    0.011    0.000 sets.py:101(__iter__)
+     2692    0.014    0.000    0.019    0.000 sets.py:341(_update)
+        1    0.000    0.000    0.000    0.000 sets.py:378(ImmutableSet)
+        1    0.000    0.000    0.000    0.000 sets.py:403(Set)
+        1    0.001    0.001    0.001    0.001 sets.py:41(<module>)
+     2692    0.007    0.000    0.026    0.000 sets.py:410(__init__)
+        1    0.000    0.000    0.000    0.000 sets.py:548(_TemporarilyImmutableSet)
+        1    0.000    0.000    0.000    0.000 sets.py:65(BaseSet)
+       56    0.000    0.000    0.002    0.000 sre_compile.py:228(_compile_charset)
+       56    0.001    0.000    0.001    0.000 sre_compile.py:256(_optimize_charset)
+        4    0.000    0.000    0.000    0.000 sre_compile.py:411(_mk_bitmap)
+       71    0.000    0.000    0.000    0.000 sre_compile.py:428(_simple)
+       16    0.000    0.000    0.002    0.000 sre_compile.py:433(_compile_info)
+       32    0.000    0.000    0.000    0.000 sre_compile.py:546(isstring)
+       16    0.000    0.000    0.006    0.000 sre_compile.py:552(_code)
+       16    0.000    0.000    0.015    0.001 sre_compile.py:567(compile)
+   143/16    0.002    0.000    0.004    0.000 sre_compile.py:64(_compile)
+      319    0.000    0.000    0.000    0.000 sre_parse.py:137(__len__)
+      644    0.001    0.000    0.001    0.000 sre_parse.py:141(__getitem__)
+       71    0.000    0.000    0.000    0.000 sre_parse.py:145(__setitem__)
+      256    0.000    0.000    0.000    0.000 sre_parse.py:149(append)
+   214/87    0.001    0.000    0.001    0.000 sre_parse.py:151(getwidth)
+       16    0.000    0.000    0.000    0.000 sre_parse.py:189(__init__)
+      601    0.001    0.000    0.001    0.000 sre_parse.py:193(__next)
+      420    0.000    0.000    0.000    0.000 sre_parse.py:206(match)
+      497    0.000    0.000    0.002    0.000 sre_parse.py:212(get)
+       43    0.000    0.000    0.000    0.000 sre_parse.py:236(_class_escape)
+       47    0.000    0.000    0.000    0.000 sre_parse.py:268(_escape)
+    63/16    0.000    0.000    0.009    0.001 sre_parse.py:317(_parse_sub)
+    68/18    0.004    0.000    0.008    0.000 sre_parse.py:395(_parse)
+       16    0.000    0.000    0.000    0.000 sre_parse.py:67(__init__)
+       16    0.000    0.000    0.009    0.001 sre_parse.py:706(parse)
+       38    0.000    0.000    0.000    0.000 sre_parse.py:74(opengroup)
+       38    0.000    0.000    0.000    0.000 sre_parse.py:85(closegroup)
+      143    0.000    0.000    0.000    0.000 sre_parse.py:92(__init__)
+        1    0.000    0.000    0.000    0.000 string.py:250(strip)
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_md5}
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_sha1}
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_sha224}
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_sha256}
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_sha384}
+        1    0.000    0.000    0.000    0.000 {_hashlib.openssl_sha512}
+     6025    0.002    0.000    0.002    0.000 {_json.encode_basestring_ascii}
+       16    0.000    0.000    0.000    0.000 {_sre.compile}
+        2    0.000    0.000    0.000    0.000 {_struct.unpack}
+        1    0.000    0.000    0.000    0.000 {_warnings.warn}
+    33482    0.013    0.000    0.013    0.000 {abs}
+    31309    0.030    0.000    0.061    0.000 {all}
+        1    0.000    0.000    0.000    0.000 {binascii.hexlify}
+       32    0.000    0.000    0.000    0.000 {chr}
+        1    0.000    0.000    0.000    0.000 {filter}
+        1    0.001    0.001    0.001    0.001 {function seed at 0x101aaeb18}
+        6    0.000    0.000    0.000    0.000 {getattr}
+        6    0.000    0.000    0.000    0.000 {globals}
+        1    0.000    0.000    0.000    0.000 {hasattr}
+ 57525582    6.020    0.000    6.020    0.000 {id}
+    27489    0.018    0.000    0.018    0.000 {isinstance}
+     2692    0.001    0.000    0.001    0.000 {iter}
+18556525/18556439    2.181    0.000    2.181    0.000 {len}
+        1    0.000    0.000    0.000    0.000 {math.exp}
+    70701    0.043    0.000    0.043    0.000 {math.log}
+        1    0.000    0.000    0.000    0.000 {math.sqrt}
+  6235118    1.471    0.000    1.471    0.000 {max}
+ 62092919    9.414    0.000    9.414    0.000 {method 'append' of 'list' objects}
+    28720    0.017    0.000    0.017    0.000 {method 'center' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'close' of 'file' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        6    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+      154    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
+       32    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+ 48823546    7.907    0.000    7.907    0.000 {method 'get' of 'dict' objects}
+       17    0.001    0.000    0.001    0.000 {method 'items' of 'dict' objects}
+    10161    0.003    0.000    0.003    0.000 {method 'iterkeys' of 'dict' objects}
+ 13183375    4.976    0.000    4.976    0.000 {method 'pop' of 'list' objects}
+   165403    0.044    0.000    0.044    0.000 {method 'random' of '_random.Random' objects}
+        1    0.041    0.041    0.041    0.041 {method 'read' of 'file' objects}
+       38    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
+       32    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+        4    0.000    0.000    0.000    0.000 {method 'translate' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'union' of 'set' objects}
+    24103    0.014    0.000    0.014    0.000 {method 'write' of 'file' objects}
+   163900    0.063    0.000    0.063    0.000 {min}
+        1    0.000    0.000    0.000    0.000 {open}
+      191    0.000    0.000    0.000    0.000 {ord}
+        1    0.003    0.003    0.003    0.003 {posix.popen}
+        1    0.000    0.000    0.000    0.000 {posix.uname}
+        1    0.000    0.000    0.000    0.000 {posix.urandom}
+  2571740    1.395    0.000    1.395    0.000 {range}
+     6025    0.006    0.000    0.006    0.000 {repr}
+        1    0.006    0.006    0.007    0.007 {sorted}
+     1795    0.005    0.000    0.005    0.000 {time.clock}
+   346110    0.090    0.000    0.090    0.000 {time.time}
+    31309    0.031    0.000    0.031    0.000 {zip}

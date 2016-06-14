@@ -99,6 +99,7 @@ class GameManager:
 			self.updateAlarm(time.clock())
 			turn = 1 - turn
 		print maxTile
+		return maxTile
 
 
 	def isGameOver(self):
@@ -118,28 +119,31 @@ class GameManager:
 
 
 def main():
-	gameManager = GameManager()
-	computerAI  = ComputerAI()
-	displayer 	= Displayer()
-	#set AIs and displayer
-	gameManager.setDisplayer(displayer)
-	try:
-		if sys.argv[1] == "minimax":
-			print "Player AI: MiniMax"
-			playerAI  	= PlayerAIMiniMax()
-		elif sys.argv[1] == "ab":	
-			print "Player AI: MiniMax + alpha beta pruning"
-			playerAI  	= PlayerAI()
-	except:
-		print "Please specify algorithm for Player AI"
-		print "MiniMax: python GameManager.py minimax"
-		print "alpha-beta: python GameManager.py ab" 
-		return	
-	gameManager.setPlayerAI(playerAI)
-	gameManager.setComputerAI(computerAI)
-	# start the game!
-	gameManager.start()
+	scores = []
+	for i in xrange(20):
+		gameManager = GameManager()
+		computerAI  = ComputerAI()
+		displayer 	= Displayer()
+		#set AIs and displayer
+		gameManager.setDisplayer(displayer)
+		try:
+			if sys.argv[1] == "minimax":
+				print "Player AI: MiniMax"
+				playerAI  	= PlayerAIMiniMax()
+			elif sys.argv[1] == "ab":	
+				print "Player AI: MiniMax + alpha beta pruning"
+				playerAI  	= PlayerAI()
+		except:
+			print "Please specify algorithm for Player AI"
+			print "MiniMax: python GameManager.py minimax"
+			print "alpha-beta: python GameManager.py ab" 
+			return	
+		gameManager.setPlayerAI(playerAI)
+		gameManager.setComputerAI(computerAI)
+		# start the gamee
+		scores.append(gameManager.start())
 
+	print scores
 
 if __name__ == '__main__':
 	main()

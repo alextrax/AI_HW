@@ -19,8 +19,12 @@ empty_weight = 20.0
 smooth_weight = -1.0
 smooth_val_weight = 0 #1.0
 mono_weight = 40.0
-edge_weight = 50.0
-
+edge_weight = 150.0
+snake_weight = 1.0
+snake = [[10,8,7,6.5],
+        [.5,.7,1,3],
+        [-.5,-1.5,-1.8,-2],
+        [-3.8,-3.7,-3.5,-3]]
 hmap = {}
 #smap = {}
 
@@ -117,6 +121,11 @@ class PlayerAI(BaseAI):
                 mono_dn += 1 
         return max(mono_l, mono_r) + max(mono_up, mono_dn)
 
+    def SnakeScore(self, grid):
+        score = 0
+        for i in xrange(grid.size):
+            for j in xrange(grid.size):
+                score += grid.map[i][j] * snake[i][j]
 
     def MixHeuristic(self, grid):
         encode = str([x for row in grid.map for x in row])
@@ -173,7 +182,8 @@ class PlayerAI(BaseAI):
                 SepScore += self.smap[rstring]
             else:    
                 mono, smooth_diff, smooth_val = self.RowColHeuristic(row)
-                smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
+                smooth_diff = smooth_diff * smooth_weight 
+                #smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
                 smooth_val *= smooth_val_weight
                 self.smap[rstring] = mono + smooth_diff + smooth_val
                 SepScore += mono + smooth_diff + smooth_val
@@ -187,7 +197,8 @@ class PlayerAI(BaseAI):
                 SepScore += self.smap[cstring]
             else:    
                 mono, smooth_diff, smooth_val = self.RowColHeuristic(col)
-                smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
+                smooth_diff = smooth_diff * smooth_weight 
+                #smooth_diff = math.log(smooth_diff) * smooth_weight if smooth_diff > 1 else 1
                 smooth_val *= smooth_val_weight
                 self.smap[cstring] = mono + smooth_diff + smooth_val
                 SepScore += mono + smooth_diff + smooth_val
@@ -195,11 +206,13 @@ class PlayerAI(BaseAI):
         
 
         avail = grid.getAvailableCells()
-        empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 0.5 * empty_weight
+        empty_count = len(avail) * empty_weight
+        #empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 0.5 * empty_weight
         max_tile = grid.getMaxTile()
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
-        score = empty_count + SepScore + edge + max_tile
+        #snakescore = self.SnakeScore(grid)
+        score = empty_count + SepScore + edge + max_tile #+ snakescore
         return score
 
     def debug_heuristic(self, grid):
@@ -222,7 +235,7 @@ class PlayerAI(BaseAI):
         smooth_val_debug = 0
         for row in grid.map:
             mono, smooth_diff, smooth_val = self.RowColHeuristic(row)
-            smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
+            #smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
             smooth_diff *= smooth_weight
             smooth_val *= smooth_val_weight
             SepScore += mono + smooth_diff + smooth_val
@@ -233,7 +246,7 @@ class PlayerAI(BaseAI):
         for i in xrange(grid.size):
             col = [row[i] for row in grid.map]
             mono, smooth_diff, smooth_val = self.RowColHeuristic(col)
-            smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
+            #smooth_diff = math.log(smooth_diff) if smooth_diff > 1 else 0 
             smooth_diff *= smooth_weight
             smooth_val *= smooth_val_weight
             SepScore += mono + smooth_diff + smooth_val
@@ -245,12 +258,14 @@ class PlayerAI(BaseAI):
         
 
         avail = grid.getAvailableCells()
-        empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 0.5 * empty_weight
+        empty_count = len(avail) * empty_weight
+        #empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 0.5 * empty_weight
         #max_tile = grid.getMaxTile() * max_weight
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
-        score = empty_count + SepScore + edge
-        print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge
+        #snakescore = self.SnakeScore(grid)
+        score = empty_count + SepScore + edge + snakescore
+        print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge#, "snake", snakescore
         print "score from SepHeuristic", score
 
     def getMove(self, grid):
