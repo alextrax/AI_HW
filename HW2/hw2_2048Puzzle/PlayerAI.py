@@ -264,7 +264,7 @@ class PlayerAI(BaseAI):
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
         #snakescore = self.SnakeScore(grid)
-        score = empty_count + SepScore + edge + snakescore
+        score = empty_count + SepScore + edge #+ snakescore
         print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge#, "snake", snakescore
         print "score from SepHeuristic", score
 
