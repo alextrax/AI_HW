@@ -8,11 +8,10 @@ import time
 import json
 import sys
 
-#vecIndex = [UP, DOWN, LEFT, RIGHT] 
 DEFAULT_DEPTH = 4
 MAX_VALUE = 2**16 
 MIN_VALUE = -(2**16)
-TIME_LIMIT = 0.2
+TIME_LIMIT = 0.9
 DEBUG = True
 
 empty_weight = 20.0
@@ -20,7 +19,7 @@ smooth_weight = -1.0
 smooth_val_weight = 0 #1.0
 mono_weight = 40.0
 edge_weight = 150.0
-snake_weight = 1.0
+snake_weight = 15.0
 snake = [[10,8,7,6.5],
         [.5,.7,1,3],
         [-.5,-1.5,-1.8,-2],
@@ -30,16 +29,13 @@ hmap = {}
 
 class PlayerAI(BaseAI):
     def __init__(self):
-        if sys.argv[2] == "H":
-
-            try:
-                with open('data.json', 'r') as fp:
-                    self.smap = json.load(fp) 
-            except:
-                self.smap = {}
-                print "failed to load data.json"   
-        else:
+        try:
+            with open('data.json', 'r') as fp:
+                self.smap = json.load(fp) 
+        except:
             self.smap = {}
+            print "failed to load data.json"   
+
 
     def __del__(self):    
         try:
@@ -79,16 +75,16 @@ class PlayerAI(BaseAI):
         score_val = 0
         for i in xrange(grid.size-1):
             for j in xrange(grid.size):                
-                if grid.map[i][j] == grid.map[i+1][j]:
-                    score_val +=  math.log(grid.map[i][j], 2) if grid.map[i][j] > 0 else 0
+                #if grid.map[i][j] == grid.map[i+1][j]:
+                #    score_val +=  math.log(grid.map[i][j], 2) if grid.map[i][j] > 0 else 0
                 
                 if grid.map[i][j] > 0 and grid.map[i+1][j] > 0:
                     score_diff += abs(math.log(grid.map[i][j], 2) - math.log(grid.map[i+1][j], 2)) if grid.map[i][j] != grid.map[i+1][j] else 0
         
         for i in xrange(grid.size):
             for j in xrange(grid.size-1):
-                if grid.map[i][j] == grid.map[i][j+1]:
-                    score_val +=  math.log(grid.map[i][j], 2) if grid.map[i][j] > 0 else 0
+                #if grid.map[i][j] == grid.map[i][j+1]:
+                #    score_val +=  math.log(grid.map[i][j], 2) if grid.map[i][j] > 0 else 0
 
                 if grid.map[i][j] > 0 and grid.map[i][j+1] > 0:
                     score_diff += abs(math.log(grid.map[i][j], 2) - math.log(grid.map[i][j+1], 2)) if grid.map[i][j] != grid.map[i][j+1] else 0
@@ -126,7 +122,7 @@ class PlayerAI(BaseAI):
         for i in xrange(grid.size):
             for j in xrange(grid.size):
                 score += grid.map[i][j] * snake[i][j]
-
+        return math.log(score) if score > 1 else 0
     def MixHeuristic(self, grid):
         encode = str([x for row in grid.map for x in row])
         if encode in hmap:
@@ -143,10 +139,7 @@ class PlayerAI(BaseAI):
         score = empty_count + smooth_diff + smooth_val + mono + edge
         hmap[encode] = score
         return score
-        #return mono + empty_count + max_tile
-        #return len(grid.getAvailableCells()) + \
-        #       math.log(grid.getMaxTile(), 2) + \
-        #       self.SameValue(grid) 
+       
 
     def RowColHeuristic(self, row):
         # smoothness
@@ -211,7 +204,7 @@ class PlayerAI(BaseAI):
         max_tile = grid.getMaxTile()
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
-        #snakescore = self.SnakeScore(grid)
+        #snakescore = self.SnakeScore(grid) * snake_weight
         score = empty_count + SepScore + edge + max_tile #+ snakescore
         return score
 
@@ -242,7 +235,6 @@ class PlayerAI(BaseAI):
             mono_debug += mono
             smooth_diff_debug += smooth_diff
             smooth_val_debug += smooth_val
-        #print "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug
         for i in xrange(grid.size):
             col = [row[i] for row in grid.map]
             mono, smooth_diff, smooth_val = self.RowColHeuristic(col)
@@ -253,30 +245,23 @@ class PlayerAI(BaseAI):
             mono_debug += mono
             smooth_diff_debug += smooth_diff
             smooth_val_debug += smooth_val
-        #print "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug
 
         
 
         avail = grid.getAvailableCells()
         empty_count = len(avail) * empty_weight
-        #empty_count =  math.log(len(avail)) * empty_weight if len(avail) > 1 else 0.5 * empty_weight
-        #max_tile = grid.getMaxTile() * max_weight
         edge = self.OnEdge(grid, grid.getMaxTile()) * edge_weight
         #print empty_count, max_tile, smooth, mono, edge
-        #snakescore = self.SnakeScore(grid)
+        #snakescore = self.SnakeScore(grid) * snake_weight
         score = empty_count + SepScore + edge #+ snakescore
-        print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge#, "snake", snakescore
+        print "empty:", empty_count, "smooth_diff:", smooth_diff_debug, "smooth_val:", smooth_val_debug, "mono:", mono_debug, "edge", edge #, "snake", snakescore
         print "score from SepHeuristic", score
 
     def getMove(self, grid):
-        #moves = grid.getAvailableMoves()
-        #return moves[randint(0,len(moves)-1)]
         if DEBUG:
             self.debug_SepHeuristic(grid)
             print grid.getAvailableMoves()
         if len(grid.getAvailableMoves()) == 0:
-            #with open('data.json', 'w') as fp:
-            #    json.dump(self.smap, fp, sort_keys=True, indent=4)
             return 0
 
         self.start = time.time()
@@ -299,9 +284,6 @@ class PlayerAI(BaseAI):
             self.debug_SepHeuristic(debugGrid)
             if result not in grid.getAvailableMoves():
                 print "direction", result, "not available"
-                #with open('data.json', 'w') as fp:
-                #    json.dump(self.smap, fp, sort_keys=True, indent=4)
-                #return 0
         return result
 
     def search(self, grid, depth, alpha, beta, isMAX, heuristic):
@@ -321,10 +303,9 @@ class PlayerAI(BaseAI):
                     if alpha < v:
                         direction = m
                         alpha = v
-                    if beta <= alpha:
-                        #print "β cut-off ", beta , "<=", alpha
+                    if beta <= alpha: # β cut-off 
                         return direction, v
-                        #break # β cut-off 
+
             if (time.time() - self.start) > TIME_LIMIT:
                 return -1, -1            
             else:
@@ -340,10 +321,8 @@ class PlayerAI(BaseAI):
                     v = min(v, self.search(gridCopy, depth - 1, alpha, beta, True, heuristic)[1])
                     if v < beta:
                         beta = v
-                    if beta <= alpha:
-                        #print "α cut-off ", beta , "<=", alpha
+                    if beta <= alpha: # α cut-off
                         return direction, v
-                        #break # α cut-off 
             if (time.time() - self.start) > TIME_LIMIT:
                 return -1, -1            
             else:            
@@ -351,8 +330,6 @@ class PlayerAI(BaseAI):
 
 class PlayerAIMiniMax(PlayerAI):
     def getMove(self, grid):
-        #moves = grid.getAvailableMoves()
-        #return moves[randint(0,len(moves)-1)]
         if DEBUG:
             self.debug_SepHeuristic(grid)
 
