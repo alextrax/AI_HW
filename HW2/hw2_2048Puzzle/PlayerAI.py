@@ -12,7 +12,7 @@ DEFAULT_DEPTH = 4
 MAX_VALUE = 2**16 
 MIN_VALUE = -(2**16)
 TIME_LIMIT = 0.9
-DEBUG = True
+DEBUG = False
 
 empty_weight = 20.0
 smooth_weight = -1.0
