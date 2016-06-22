@@ -1,4 +1,7 @@
-*** Please update GameManager.py to support multiple algorithms(alpha-beate/minimax) *** 
+Name: Chih-Sheng Wang
+UNI: cw2952
+e-mail: cw2952@columbia.edu
+
 
 #How to run program:
 MiniMax: 

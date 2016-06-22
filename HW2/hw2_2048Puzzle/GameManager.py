@@ -3,7 +3,7 @@
 
 from Grid import Grid
 from ComputerAI import ComputerAI
-from PlayerAI import PlayerAI, PlayerAIMiniMax
+from PlayerAI import PlayerAI
 from Displayer import Displayer
 from random import randint
 import time
@@ -124,18 +124,7 @@ def main():
 	displayer 	= Displayer()
 	#set AIs and displayer
 	gameManager.setDisplayer(displayer)
-	try:
-		if sys.argv[1] == "minimax":
-			print "Player AI: MiniMax"
-			playerAI  	= PlayerAIMiniMax()
-		elif sys.argv[1] == "ab":	
-			print "Player AI: MiniMax + alpha beta pruning"
-			playerAI  	= PlayerAI()
-	except:
-		print "Please specify algorithm for Player AI"
-		print "MiniMax: python GameManager.py minimax"
-		print "alpha-beta: python GameManager.py ab" 
-		return	
+	playerAI  	= PlayerAI()	
 	gameManager.setPlayerAI(playerAI)
 	gameManager.setComputerAI(computerAI)
 	# start the gamee
