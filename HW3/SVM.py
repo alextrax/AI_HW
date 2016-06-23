@@ -7,6 +7,7 @@ from sklearn import svm
 from sklearn import cross_validation
 from sklearn import linear_model
 from sklearn import tree
+from sklearn.cross_validation import train_test_split
 
 csv = np.genfromtxt ('chessboard.csv', delimiter=",", skip_header=1)
 
@@ -27,10 +28,18 @@ plt.yticks(())
 plt.title("Original Data")
 
 
-test = np.genfromtxt ('test.csv', delimiter=",")
-train = np.genfromtxt ('train.csv', delimiter=",")
-label = train[:,2:3]
+csv1 = csv[csv[:,2] == 1]
+csv0 = csv[csv[:,2] == 0]
+
+train1_x, test1_x, train1_y, test1_y = train_test_split(csv1[:,0:2], csv1[:,2], train_size=0.6)
+train0_x, test0_x, train0_y, test0_y = train_test_split(csv0[:,0:2], csv0[:,2], train_size=0.6)
+
+train = np.concatenate((train1_x, train0_x), axis=0)
+test = np.concatenate((test1_x, test0_x), axis=0)
+label = np.concatenate((train1_y, train0_y), axis=0)
+label_test = np.concatenate((test1_y, test0_y), axis=0)
 label = np.reshape(label, label.shape[0])
+
 
 def plotting(num, method, title):	
     plt.subplot(2, 3, num)
@@ -50,41 +59,41 @@ def plotting(num, method, title):
 
 
 linear_svc = svm.SVC(kernel='linear', C=1)
-linear_svc.fit(train[:,0:2], label)
-print "Linear kernel test data accuracy: %.2f%%" % (linear_svc.score(test[:,0:2], np.reshape(test[:,2:3], test[:,2:3].shape[0]))*100)
+linear_svc.fit(train, label)
+print "Linear kernel test data accuracy: %.2f%%" % (linear_svc.score(test, label_test)*100)
 scores = cross_validation.cross_val_score(linear_svc, csv[:,0:2], np.reshape(csv[:,2:3], csv[:,2:3].shape[0]), cv=5)
 print "Linear kernel Cross-Validation accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 plotting(2, linear_svc, "SVM - linear kernel")
 
 
 rbf_svc = svm.SVC(kernel='rbf')
-rbf_svc.fit(train[:,0:2], label)
-print "RBF kernel test data accuracy: %.2f%%" % (rbf_svc.score(test[:,0:2], np.reshape(test[:,2:3], test[:,2:3].shape[0])) *100)
+rbf_svc.fit(train, label)
+print "RBF kernel test data accuracy: %.2f%%" % (rbf_svc.score(test, label_test)*100)
 scores = cross_validation.cross_val_score(rbf_svc, csv[:,0:2], np.reshape(csv[:,2:3], csv[:,2:3].shape[0]), cv=5)
 print "RBF kernel Cross-Validation accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 plotting(3, rbf_svc, "SVM - RBF kernel")
 
 
 
-poly_svc = svm.SVC(kernel='poly', degree=7)
-poly_svc.fit(train[:,0:2], label)
-print "Polynomial kernel test data accuracy: %.2f%%" % (poly_svc.score(test[:,0:2], np.reshape(test[:,2:3], test[:,2:3].shape[0]))*100)
+poly_svc = svm.SVC(kernel='poly', degree=7, C=2)
+poly_svc.fit(train, label)
+print "Polynomial kernel test data accuracy: %.2f%%" % (poly_svc.score(test, label_test)*100)
 #scores = cross_validation.cross_val_score(poly_svc, csv[:,0:2], np.reshape(csv[:,2:3], csv[:,2:3].shape[0]), cv=5)
 #print "Polynomial kernel Cross-Validation accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 plotting(4, poly_svc, "SVM - Polynomial kernel\ndegree=7")
 
 
 logreg = linear_model.LogisticRegression()
-logreg.fit(train[:,0:2], label)
-print "Logistic Regression test data accuracy: %.2f%%" % (logreg.score(test[:,0:2], np.reshape(test[:,2:3], test[:,2:3].shape[0]))*100)
+logreg.fit(train, label)
+print "Logistic Regression test data accuracy: %.2f%%" % (logreg.score(test, label_test)*100)
 scores = cross_validation.cross_val_score(logreg, csv[:,0:2], np.reshape(csv[:,2:3], csv[:,2:3].shape[0]), cv=5)
 print "Logistic Regression Cross-Validation accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 plotting(5, logreg, "Logistic Regression")
 
 
 dtree = tree.DecisionTreeClassifier()
-dtree.fit(train[:,0:2], label)
-print "Decision tree test data accuracy: %.2f%%" % (dtree.score(test[:,0:2], np.reshape(test[:,2:3], test[:,2:3].shape[0]))*100)
+dtree.fit(train, label)
+print "Decision tree test data accuracy: %.2f%%" % (dtree.score(test, label_test)*100)
 scores = cross_validation.cross_val_score(dtree, csv[:,0:2], np.reshape(csv[:,2:3], csv[:,2:3].shape[0]), cv=5)
 print "Decision Tree Cross-Validation accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 plotting(6, dtree, "Decision Tree")
