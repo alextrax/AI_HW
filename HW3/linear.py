@@ -31,14 +31,15 @@ for i in range(weight_scaled.shape[0]):
 
 def gradient_decent(x, y, times):
 	theta = np.zeros(x.shape[1])
+	values = []
 	for i in xrange(times):
 		estimate = np.dot(x, theta)
 		loss = estimate - y
 		gradient = np.dot(x.T, loss) / x.shape[0]
-		#print gradient, x.shape[0], x.shape[1]
 		theta = theta - ALPHA * gradient    
-		print "# %d , loss = %f" % (i, np.sum(abs(loss)))
-
+		#print "# %d , loss = %f" % (i, np.sum(abs(loss)))
+		values.append(np.sum(abs(loss)))
+	plt.plot(range(times), values, marker='o', linestyle='--', color='r')
 	return theta	
 
 
@@ -54,7 +55,9 @@ theta = gradient_decent(x, heights, 50)
 print theta
 print predicted(5, 20, theta)
 
-
+plt.title("Alpha = 1")
+plt.legend()
+plt.show()
 
 
 
