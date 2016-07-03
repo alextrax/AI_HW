@@ -3,6 +3,8 @@
 
 import string
 from copy import deepcopy
+import time
+
 
 ROW = "ABCDEFGHI";
 COL = "123456789";
@@ -22,7 +24,7 @@ def outputSudoku(sudoku, f):
 			f.write(str(sudoku[i + j])+" "),
 		f.write("\n")
 
-def get_square_checklist(var):
+def get_square_checklist(var): # get relevent square for a variable
 	if var[0] == 'A' or var[0] == 'B' or var[0] == 'C':
 		rowindex = ['A', 'B', 'C']
 	elif var[0] == 'D' or var[0] == 'E' or var[0] == 'F':
@@ -39,7 +41,7 @@ def get_square_checklist(var):
 
 	return ["".join((x, y)) for x in rowindex for y in colindex]
 
-def get_availale(var, sudo):
+def get_availale(var, sudo): # get available values for a variable
 	available = set(range(1,10))
 	square = get_square_checklist(var)
 	allcol = [var[0]+str(x) for x in range(1,10)]
@@ -55,7 +57,7 @@ def get_availale(var, sudo):
 
 	return available
 
-def get_arcs(var, sudo): # return var->others and others->var
+def get_arcs(var, sudo): # return two kinds of arcs, 1: var->others, 2: others->var
 	candidate = []
 	square = get_square_checklist(var)
 	allcol = [var[0]+str(x) for x in range(1,10)]
@@ -85,7 +87,7 @@ def remove_inconsistant(i, j, d_avail):
 	d_avail[i] = set(avail_list)
 	return removed
 
-def ac3(sudo):
+def ac3(sudo): # AC3 checking loop
 	queue = []
 	d_avail = {}
 
@@ -108,8 +110,7 @@ def ac3(sudo):
 			return False
 	return True	
 
-def getMRV(candlist, d_avail):
-	#print candlist
+def getMRV(candlist, d_avail): # sort variables by its' # of available values
 	tmp = sorted(candlist, key=lambda x: len(d_avail[x]))
 	return tmp[0]
 
@@ -148,7 +149,7 @@ def backtracking(sudo):
 	return recursive_backtracking(sudo, unassigned, d_avail)
 
 
-def evaluate(var, sudo):
+def validate(var, sudo): # validate sudoku result
 	available = set(range(1,10))
 	square = get_square_checklist(var)
 	allcol = [var[0]+str(x) for x in range(1,10)]
@@ -167,9 +168,9 @@ def evaluate(var, sudo):
 
 	return available
 
-def evaluate_sudoku(sudo):
+def validate_sudoku(sudo): # validate sudoku result
 	for i in sudo:
-		if len(evaluate(i, sudo)) != 1:
+		if len(validate(i, sudo)) != 1:
 			return False
 	return True	
 
@@ -186,6 +187,7 @@ except:
 num_ac3_solved = 0
 solvable = []
 i = 0
+start = time.time()
 for line in sudokuList.split("\n"):
 	# Parse sudokuList to individual sudoku in dict, e.g. sudoku["A2"] = 1
 	sudoku = {ROW[i] + COL[j]: int(line[9*i+j]) for i in range(9) for j in range(9)}
@@ -196,23 +198,25 @@ for line in sudokuList.split("\n"):
 		
 
 print "num_ac3_solved:",num_ac3_solved, solvable	
-
+print "AC3 execution time:",time.time() - start 
 	# write your AC3 algorithms here, update num_ac3_solved	
 
 # 1.6 solve all sudokus by backtracking
 success = 0
 fail = 0
 f = open('output_cw2952.txt','w')
+start = time.time()
 for line in sudokuList.split("\n"):
 	# Parse sudokuList to individual sudoku in dict, e.g. sudoku["A2"] = 1
 	sudoku = {ROW[i] + COL[j]: int(line[9*i+j]) for i in range(9) for j in range(9)}
 
 	# write your backtracking algorithms here
 	sudoku = backtracking(sudoku)
-	if evaluate_sudoku(sudoku) == True:
+	if validate_sudoku(sudoku) == True:
 		success += 1
 	else:
 		fail += 1	
 	printSudoku(sudoku)
 	outputSudoku(sudoku, f)
 print "Success:",success,", Fail:", fail	
+print "Backtracking execution time:",time.time() - start 
